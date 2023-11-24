@@ -1,0 +1,85 @@
+
+#include <stdlib.h>
+#include<stdio.h>
+
+/*$inserare$ stergere adaugare*/
+typedef struct nod
+{
+	int poz;
+	char nume[30];
+	struct nod* urm;
+}nod;
+
+nod* lista_inceput(nod* lista, nod* aux)
+{
+	aux->urm = lista;
+	lista = aux;
+	return aux;
+}
+
+void afisare(nod* lista)
+{
+	nod* q;
+	q = lista;
+	while (q != NULL)
+	{
+		printf("%d", q->poz);
+		q = q->urm;
+	}
+}
+
+void inserare(nod* lista1,nod* lista2, int locatie)
+{
+	nod* q,*aux;
+
+	for (q=lista1; q != NULL; q = q->urm)
+	{
+		if (q->poz == locatie)
+		{
+
+			aux = q->urm;
+			q->urm = lista2;
+			lista2->urm = aux;
+		}
+
+	}
+}
+void adauga_inceput(nod* lista, nod* aux)
+{
+	nod * aux1;
+	aux1 = lista->urm;
+	lista->urm = aux;
+	aux->urm= aux1;
+
+}
+void stergerePozitie(nod** cap, int pozitie)
+{
+	if (*cap == NULL)
+		return;
+
+	nod* temp = *cap;
+
+	// Daca nodul de sters este primul
+	if (pozitie == 0)
+	{
+		*cap = temp->urm;
+		free(temp);
+		return;
+	}
+	// Gasirea nodului precedent celui de sters
+	for (int i = 0; temp != NULL && i < pozitie - 1; i++)
+		temp = temp->urm;
+
+	// Daca pozitia este mai mare decat lungimea listei
+	if (temp == NULL || temp->urm == NULL)
+		return;
+
+	// Nodul de sters este acum temp->urm, salvam adresa lui
+	nod* urmator = temp->urm->urm;
+
+	// Eliberam memoria alocata nodului de sters
+	free(temp->urm);
+
+	// Rearanjam legaturile pentru a elimina nodul de sters
+	temp->urm = urmator;
+}
